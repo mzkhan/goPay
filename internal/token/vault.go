@@ -151,9 +151,16 @@ func (v *VGSVault) Detokenize(ctx context.Context, token string) (string, error)
 	return result.Data[0].Value, nil
 }
 
-// StubVault returns the token as-is. For development/testing only.
+// StubVault strips common token prefixes and returns the value.
+// For development/testing only.
 type StubVault struct{}
 
-func (v *StubVault) Detokenize(_ context.Context, token string) (string, error) {
-	return token, nil
+func (v *StubVault) Detokenize(_ context.Context, tkn string) (string, error) {
+	// Strip common vault token prefixes so dev testing works with "tok_4111..."
+	for _, p := range []string{"tok_", "vgs_", "tkx_"} {
+		if len(tkn) > len(p) && tkn[:len(p)] == p {
+			return tkn[len(p):], nil
+		}
+	}
+	return tkn, nil
 }
