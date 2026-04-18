@@ -1,0 +1,9 @@
+gopay
+*.exe
+*.out
+*.test
+.env
+vendor/
+.idea/
+.vscode/
+*.log
